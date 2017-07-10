@@ -35,12 +35,8 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private EditText mEditText;
     private Button mFetchFeedButton;
-    //private SwipeRefreshLayout mSwipeLayout;
     private String link;
     private List<Noticia> mFeedModelList;
-    private String mFeedTitle;
-    private String mFeedLink;
-    private String mFeedDescription;
     private String urlImagen;
 
     @Override
@@ -53,8 +49,6 @@ public class ListActivity extends AppCompatActivity {
         mEditText = (EditText) findViewById(R.id.rssFeedEditText);
         mEditText.setText(getString(R.string.url));
         mFetchFeedButton = (Button) findViewById(R.id.fetchFeedButton);
-        //mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mFetchFeedButton.setOnClickListener(new View.OnClickListener() {
@@ -63,22 +57,16 @@ public class ListActivity extends AppCompatActivity {
                 new FetchFeedTask().execute((Void) null);
             }
         });
-        /*mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new FetchFeedTask().execute((Void) null);
-            }
-        });*/
     }
 
 
+    //Hacemos la llamada al feed en una tarea asíncrona.
     private class FetchFeedTask extends AsyncTask<Void, Void, Boolean> {
 
         private String urlLink;
 
         @Override
         protected void onPreExecute() {
-            //mSwipeLayout.setRefreshing(true);
             urlLink = mEditText.getText().toString();
         }
 
@@ -111,7 +99,6 @@ public class ListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean success) {
-            //mSwipeLayout.setRefreshing(false);
 
             if (success) {
                 Log.i("David", "Creamos el adapter");
@@ -154,6 +141,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
+    //Éste método procesará la respuesta del servidor, obteniendo los elementos que la componen, y creando objetos "Noticia" con ellos. Los almacenamos en la BBDD, y también en
     public List<Noticia> parseFeed(InputStream inputStream) throws XmlPullParserException,
             IOException {
         String title = null;
@@ -209,12 +197,18 @@ public class ListActivity extends AppCompatActivity {
                         Noticia item = new Noticia(title, desc, link, urlImagen, ListActivity.this);
                         items.add(item);
                         BBDD bbdd=new BBDD(ListActivity.this);
-                        bbdd.insertarNoticia(item);
-                    }
-                    else {
-                        mFeedTitle = title;
-                        //mFeedLink = link;
-                        mFeedDescription = description;
+                        ArrayList<Noticia> noticias=bbdd.recuperarNoticias();
+                        boolean presente=false;
+                        //Iteramos por las noticias insertadas ya en la BBDD, para en caso de que ya estuciera insertada, no se insertase.
+                        for(int i=0;i<noticias.size();i++){
+                            if(item.title.equals(noticias.get(i).title)){
+                                presente=true;
+                            }
+                        }
+                        if(!presente){
+                            bbdd.insertarNoticia(item);
+                        }
+
                     }
 
                     title = null;
@@ -228,7 +222,7 @@ public class ListActivity extends AppCompatActivity {
             inputStream.close();
         }
     }
-
+    //Este método procesa la descripción para quitarle las etiquetas <p>, la etiqueta <img>, y obtener la url de la imagen.
     private String procesarDescripcion(String description) {
 
         Log.i("David", "Descripcion: "+description);

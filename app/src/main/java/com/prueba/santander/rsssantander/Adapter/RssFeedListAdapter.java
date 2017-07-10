@@ -27,12 +27,8 @@ public class RssFeedListAdapter
 
     @Override
     public void onClick(View view) {
-        Log.i("David", "onClick");
         if(listener != null){
             listener.onClick(view);
-            Log.i("David","onClick en el adapter");
-        }else{
-            Log.i("David", "El listener es nulo");
         }
 
     }
@@ -60,7 +56,6 @@ public class RssFeedListAdapter
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
-        Log.i("David", "Colocamos onClickListener");
         this.listener = listener;
     }
 
@@ -74,7 +69,6 @@ public class RssFeedListAdapter
         Picasso.with(noticia.ctx)
                 .load(noticia.imageUrl)
                 .into(imagen);
-        //((TextView)holder.rssFeedView.findViewById(R.id.linkText)).setText(noticia.link);
     }
 
     @Override

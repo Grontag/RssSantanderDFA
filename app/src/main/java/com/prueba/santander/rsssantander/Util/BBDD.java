@@ -58,7 +58,6 @@ public class BBDD extends SQLiteOpenHelper {
 
     private void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTICIAS);
-        //db.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTICIAS_VISITADAS);
     }
 
     @Override
@@ -102,6 +101,23 @@ public class BBDD extends SQLiteOpenHelper {
             }while (csr.moveToNext());
 
             }
+
+        csr.close();
+        return noticias;
+    }
+
+    public ArrayList<Noticia> recuperarNoticias(){
+        if(db==null){
+            db=getReadableDatabase();
+        }
+        ArrayList<Noticia> noticias=new ArrayList<>();
+        Cursor csr=db.rawQuery("SELECT * from "+TABLE_NOTICIAS, null);
+        if(csr.moveToFirst()){
+            do{
+                noticias.add(new Noticia(csr.getString(0),csr.getString(1), csr.getString(2), csr.getString(3), ctx));
+            }while (csr.moveToNext());
+
+        }
 
         csr.close();
         return noticias;
