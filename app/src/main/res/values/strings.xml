@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RssSantander</string>
+    <string name="obtener">Obtener</string>
+    <string name="url">http://www.xatakandroid.com/tag/feeds/rss2.xml</string>
+    <string name="fuente">Fuente de datos</string>
+    <string name="feedtitle">Título del feed</string>
+    <string name="feeddescription">Descripción del feed</string>
+    <string name="feedurl">Url del feed</string>
+    <string name="norss">La url no es un RSS válido.</string>
+    <string name="seenav">Ver en navegador</string>
+    <string name="nointernet">Imposible descargar noticias, no hay conexión a Internet. Presentamos las últimas noticias leídas.</string>
+</resources>
