@@ -158,6 +158,7 @@ public class ListActivity extends AppCompatActivity {
             while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
                 int eventType = xmlPullParser.getEventType();
 
+                //Obtenemos el nombre del elemento en el que estamos.
                 String name = xmlPullParser.getName();
                 if(name == null)
                     continue;
@@ -183,6 +184,7 @@ public class ListActivity extends AppCompatActivity {
                     xmlPullParser.nextTag();
                 }
 
+                //Vamos iterando para saber cuál es el elemento.
                 if (name.equalsIgnoreCase("title")) {
                     title = result;
                 } else if (name.equalsIgnoreCase("link")) {
