@@ -57,6 +57,7 @@ public class BBDD extends SQLiteOpenHelper {
 
     private void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTICIAS);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NOTICIAS_VISITADAS);
     }
 
     @Override
@@ -117,7 +118,6 @@ public class BBDD extends SQLiteOpenHelper {
             }while (csr.moveToNext());
 
         }
-
         csr.close();
         return noticias;
     }
