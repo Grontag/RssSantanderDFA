@@ -29,6 +29,7 @@ dependencies {
     /*compile 'com.android.support:appcompat-v7:25.0.1'*/
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
+    //Utilizamos la librería Picasso dado que hace bastante fácil el uso de imágenes, y además lo hace asíncronamente.
     compile "com.squareup.picasso:picasso:2.4.0"
     testCompile 'junit:junit:4.12'
 }
