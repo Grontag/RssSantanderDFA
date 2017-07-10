@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.prueba.santander.rsssantander.Beans.Noticia;
 
@@ -30,10 +29,10 @@ public class BBDD extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        this.db=db;
-        Log.i("David", "onCreate de BBDD");
+        if(db==null){
+            db=getWritableDatabase();
+        }
         dropTables(db);
-        //db=getWritableDatabase();
         poblarTablas(db);
     }
 

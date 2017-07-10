@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.widget.Button;
@@ -84,12 +83,10 @@ public class ListActivity extends AppCompatActivity {
                 mFeedModelList = parseFeed(inputStream);
                 return true;
             } catch (IOException e) {
-                Log.e("David", "Error", e);
                 Toast.makeText(ListActivity.this,getString(R.string.nointernet),Toast.LENGTH_LONG).show();
                 BBDD bbdd=new BBDD(ListActivity.this);
                 mFeedModelList = bbdd.recuperarNoticiasLeidas();
             } catch (XmlPullParserException e) {
-                Log.e("David", "Error", e);
                 Toast.makeText(ListActivity.this,getString(R.string.nointernet),Toast.LENGTH_LONG).show();
                 BBDD bbdd=new BBDD(ListActivity.this);
                 mFeedModelList = bbdd.recuperarNoticiasLeidas();
@@ -101,7 +98,6 @@ public class ListActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
 
             if (success) {
-                Log.i("David", "Creamos el adapter");
                 RssFeedListAdapter adapter=new RssFeedListAdapter(mFeedModelList);
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -122,8 +118,6 @@ public class ListActivity extends AppCompatActivity {
                                     ListActivity.this));
                         }
 
-                        Log.i("David", "Hemos pulsado el elemento "+mRecyclerView.getChildLayoutPosition(view));
-                        Log.i("David", "El título: "+mFeedModelList.get(mRecyclerView.getChildLayoutPosition(view)).title);
                         Intent intent=new Intent(ListActivity.this, DetalleActivity.class);
                         intent.putExtra("titulo", mFeedModelList.get(mRecyclerView.getChildLayoutPosition(view)).title);
                         intent.putExtra("descripcion", mFeedModelList.get(mRecyclerView.getChildLayoutPosition(view)).description);
@@ -177,7 +171,6 @@ public class ListActivity extends AppCompatActivity {
                     }
                 }
 
-                Log.d("MyXmlParser", "Parsing name ==> " + name);
                 String result = "";
                 if (xmlPullParser.next() == XmlPullParser.TEXT) {
                     result = xmlPullParser.getText();
@@ -227,7 +220,6 @@ public class ListActivity extends AppCompatActivity {
     //Este método procesa la descripción para quitarle las etiquetas <p>, la etiqueta <img>, y obtener la url de la imagen.
     private String procesarDescripcion(String description) {
 
-        Log.i("David", "Descripcion: "+description);
         String regexString = Pattern.quote("<p>") + "(.*?)" + Pattern.quote("</p>");
         Pattern pattern = Pattern.compile(regexString);
         Matcher matcher = pattern.matcher(description);
@@ -235,7 +227,6 @@ public class ListActivity extends AppCompatActivity {
         while (matcher.find()) {
             textoSinParrafos+=matcher.group(1);
         }
-        Log.i("David", "Texto sin parrafos: "+textoSinParrafos);
         String textoUrl="";
         String regexStringUrl = Pattern.quote("<img") + "(.*?)" + Pattern.quote("/>");
         Pattern patternUrl = Pattern.compile(regexStringUrl);
@@ -244,17 +235,14 @@ public class ListActivity extends AppCompatActivity {
             textoUrl+=matcherUrl.group(1);
             break;
         }
-        Log.i("David", "El texto con la url: "+textoUrl);
         textoSinParrafos=textoSinParrafos.replace(textoUrl,"");
         textoSinParrafos=textoSinParrafos.replace("<img/>", "");
 
         if(!textoUrl.equals("")){
             String enlaceImagen;
             enlaceImagen=textoUrl.substring(textoUrl.indexOf("//"));
-            Log.i("David", "Texto con el enlace de la imagen, antes de quitarle el último caracter: "+enlaceImagen);
             enlaceImagen=enlaceImagen.substring(0, enlaceImagen.length() - 1);
             enlaceImagen="http:"+enlaceImagen.substring(0, enlaceImagen.length() - 1);
-            Log.i("David", "Enlace de la imagen: "+enlaceImagen);
             urlImagen=enlaceImagen;
         }
 
